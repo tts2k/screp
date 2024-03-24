@@ -79,7 +79,7 @@ func printToc(sections []lib.Section, level int) {
 	}
 
 	for _, section := range sections {
-		fmt.Println(pad, section.Title)
+		fmt.Printf("%s%s\n", pad, section.Title)
 		if len(section.SubSections) > 0 {
 			printToc(section.SubSections, level+1)
 		}
