@@ -9,7 +9,7 @@ go run . https://plato.stanford.edu/entries/exploitation/
 ### TODO
 - [x] TOC print out as a tree
 - [ ] Scrape main text
-- [ ] CLI
+- [x] CLI
 - [ ] JSON output
 - [ ] YAML output
 - [ ] Use the result to do some silly things with [templ](https://templ.guide)
