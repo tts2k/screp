@@ -33,7 +33,18 @@ func parseMainText(childs *goquery.Selection) []Section {
 
 	headingRe := regexp.MustCompile("^[^A-Za-z]+")
 
+	// Getting the correct section list
+	var currSectList *[]Section
 	headingLvl := 2
+
+	updateCurrSectList := func() {
+		if secStack.IsEmpty() {
+			currSectList = &result
+		} else {
+			currSectList = &secStack.Peek().SubSections
+		}
+	}
+	updateCurrSectList()
 
 	childs.Each(func(_ int, s *goquery.Selection) {
 		tagName := goquery.NodeName(s)
