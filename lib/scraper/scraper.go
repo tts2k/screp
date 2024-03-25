@@ -12,17 +12,22 @@ import (
 	"github.com/gocolly/colly"
 )
 
-type Scraper struct {
-	url       string
-	article   model.Article
-	collector *colly.Collector
+type Config struct {
+	Verbose bool
+	Url     string
 }
 
-func NewScarper(url string) *Scraper {
+type Scraper struct {
+	article   model.Article
+	collector *colly.Collector
+	config    Config
+}
+
+func NewScarper(config Config) *Scraper {
 	return &Scraper{
-		url:       url,
 		collector: colly.NewCollector(),
 		article:   model.Article{},
+		config:    config,
 	}
 }
 
@@ -30,7 +35,7 @@ func (scraper *Scraper) Article() model.Article {
 	return scraper.article
 }
 
-func parseMainText(childs *goquery.Selection) []model.Section {
+func parseMainText(config *Config, childs *goquery.Selection) []model.Section {
 	result := []model.Section{}
 	secStack := container.SectionStack{}
 
@@ -80,7 +85,9 @@ func parseMainText(childs *goquery.Selection) []model.Section {
 
 		// Unsupported tags
 		if tagName != "p" {
-			fmt.Println("Skipped unsupported tag:", tagName)
+			if config.Verbose {
+				fmt.Println("Skipped unsupported tag:", tagName)
+			}
 			return
 		}
 
@@ -136,10 +143,10 @@ func (scraper *Scraper) Scrape() error {
 	})
 
 	scraper.collector.OnHTML("div[id=main-text]", func(e *colly.HTMLElement) {
-		scraper.article.Sections = parseMainText(e.DOM.Children())
+		scraper.article.Sections = parseMainText(&scraper.config, e.DOM.Children())
 	})
 
-	err := scraper.collector.Visit(scraper.url)
+	err := scraper.collector.Visit(scraper.config.Url)
 	if err != nil {
 		return err
 	}
