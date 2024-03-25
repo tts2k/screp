@@ -1,8 +1,10 @@
-package lib
+package container
 
 import (
 	"container/list"
 	"sync"
+
+	"screp/lib/model"
 )
 
 type SectionStack struct {
@@ -16,7 +18,7 @@ func (st *SectionStack) IsEmpty() bool {
 }
 
 // Push: push a new element to stack
-func (st *SectionStack) Push(section *Section) {
+func (st *SectionStack) Push(section *model.Section) {
 	st.mutex.Lock()
 	defer st.mutex.Unlock()
 
@@ -28,12 +30,12 @@ func (st *SectionStack) Push(section *Section) {
 }
 
 // Peek: Get the top item on stack without removing it
-func (st *SectionStack) Peek() *Section {
-	return st.data.Front().Value.(*Section)
+func (st *SectionStack) Peek() *model.Section {
+	return st.data.Front().Value.(*model.Section)
 }
 
 // Pop: Remove the top item on the stack and return it
-func (st *SectionStack) Pop() *Section {
+func (st *SectionStack) Pop() *model.Section {
 	st.mutex.Lock()
 	defer st.mutex.Unlock()
 
@@ -41,5 +43,5 @@ func (st *SectionStack) Pop() *Section {
 		return nil
 	}
 
-	return st.data.Remove(st.data.Front()).(*Section)
+	return st.data.Remove(st.data.Front()).(*model.Section)
 }

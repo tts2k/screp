@@ -1,4 +1,4 @@
-package lib
+package model
 
 type Section struct {
 	Title       string

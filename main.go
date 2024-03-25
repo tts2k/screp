@@ -4,19 +4,19 @@ import (
 	"fmt"
 	"os"
 
-	"screp/lib"
+	"screp/lib/scraper"
 )
 
 func main() {
 	args := os.Args[1:]
 
-	scraper := lib.NewScarper(args[0])
+	scr := scraper.NewScarper(args[0])
 
-	err := scraper.Scrape()
+	err := scr.Scrape()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
 	}
 
-	scraper.PrintTOC()
+	scr.PrintTOC()
 }

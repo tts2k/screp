@@ -1,9 +1,12 @@
-package lib
+package scraper
 
 import (
 	"fmt"
 	"regexp"
 	"strconv"
+
+	"screp/lib/model"
+	container "screp/lib/utils"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
@@ -11,7 +14,7 @@ import (
 
 type Scraper struct {
 	url       string
-	article   Article
+	article   model.Article
 	collector *colly.Collector
 }
 
@@ -19,22 +22,22 @@ func NewScarper(url string) *Scraper {
 	return &Scraper{
 		url:       url,
 		collector: colly.NewCollector(),
-		article:   Article{},
+		article:   model.Article{},
 	}
 }
 
-func (scraper *Scraper) Article() Article {
+func (scraper *Scraper) Article() model.Article {
 	return scraper.article
 }
 
-func parseMainText(childs *goquery.Selection) []Section {
-	result := []Section{}
-	secStack := SectionStack{}
+func parseMainText(childs *goquery.Selection) []model.Section {
+	result := []model.Section{}
+	secStack := container.SectionStack{}
 
 	headingRe := regexp.MustCompile("^[^A-Za-z]+")
 
 	// Getting the correct section list
-	var currSectList *[]Section
+	var currSectList *[]model.Section
 	headingLvl := 2
 
 	updateCurrSectList := func() {
@@ -48,18 +51,6 @@ func parseMainText(childs *goquery.Selection) []Section {
 
 	childs.Each(func(_ int, s *goquery.Selection) {
 		tagName := goquery.NodeName(s)
-
-		// Getting the correct section list
-		var currSectList *[]Section
-
-		updateCurrSectList := func() {
-			if secStack.IsEmpty() {
-				currSectList = &result
-			} else {
-				currSectList = &secStack.Peek().SubSections
-			}
-		}
-		updateCurrSectList()
 
 		// Heading tag
 		if tagName[0] == 'h' {
@@ -81,7 +72,7 @@ func parseMainText(childs *goquery.Selection) []Section {
 			}
 
 			// When heading levels are equal
-			newSection := Section{Title: headingRe.ReplaceAllString(s.Text(), "")}
+			newSection := model.Section{Title: headingRe.ReplaceAllString(s.Text(), "")}
 			*currSectList = append(*currSectList, newSection)
 
 			return
@@ -101,7 +92,7 @@ func parseMainText(childs *goquery.Selection) []Section {
 	return result
 }
 
-func recurPrintTOC(sections []Section, prefix string, level int) {
+func recurPrintTOC(sections []model.Section, prefix string, level int) {
 	var pad string
 	for i := 0; i < level; i++ {
 		pad += "  "
