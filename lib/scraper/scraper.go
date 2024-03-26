@@ -1,15 +1,18 @@
 package scraper
 
 import (
+	"encoding/json"
 	"fmt"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"screp/lib/model"
 	container "screp/lib/utils"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
+	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
@@ -160,4 +163,22 @@ func (scraper *Scraper) Scrape() error {
 	scraper.collector.Wait()
 
 	return nil
+}
+
+func (scraper *Scraper) YAML() (string, error) {
+	out, err := yaml.Marshal(scraper.article)
+	if err != nil {
+		return "", err
+	}
+
+	return string(out), nil
+}
+
+func (scraper *Scraper) JSON() (string, error) {
+	out, err := json.Marshal(scraper.article)
+	if err != nil {
+		return "", err
+	}
+
+	return string(out), nil
 }

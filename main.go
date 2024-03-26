@@ -69,5 +69,30 @@ func main() {
 		return
 	}
 
+	// YAML
+	if yamlF {
+		yaml, err := scr.YAML()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			return
+		}
+
+		fmt.Println(yaml)
+		return
+	}
+
+	// JSON
+	if jsonF {
+		json, err := scr.JSON()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			return
+		}
+
+		fmt.Println(json)
+		return
+	}
+
+	// Print table of content
 	scr.PrintTOC()
 }
