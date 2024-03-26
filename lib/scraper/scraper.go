@@ -35,6 +35,12 @@ func (scraper *Scraper) Article() model.Article {
 	return scraper.article
 }
 
+func processPText(text string) string {
+	text = strings.TrimSpace(text)
+	text = strings.ReplaceAll(text, "\n", " ")
+	return text
+}
+
 func parseMainText(config *Config, childs *goquery.Selection) []model.Section {
 	result := []model.Section{}
 	secStack := container.SectionStack{}
@@ -93,7 +99,7 @@ func parseMainText(config *Config, childs *goquery.Selection) []model.Section {
 
 		// p tag
 		currSect := &(*currSectList)[len(*currSectList)-1]
-		currSect.Content = append(currSect.Content, s.Text())
+		currSect.Content = append(currSect.Content, processPText(s.Text()))
 	})
 
 	return result
@@ -138,8 +144,8 @@ func (scraper *Scraper) Scrape() error {
 		scraper.article.Title = e.Text
 	})
 
-	scraper.collector.OnHTML("div[id=preamble]", func(e *colly.HTMLElement) {
-		scraper.article.Preamble = e.Text
+	scraper.collector.OnHTML("div[id=preamble] > p", func(e *colly.HTMLElement) {
+		scraper.article.Preamble = append(scraper.article.Preamble, processPText(e.Text))
 	})
 
 	scraper.collector.OnHTML("div[id=main-text]", func(e *colly.HTMLElement) {
