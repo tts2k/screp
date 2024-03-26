@@ -23,7 +23,7 @@ type Scraper struct {
 	config    Config
 }
 
-func NewScarper(config Config) *Scraper {
+func NewScraper(config Config) *Scraper {
 	return &Scraper{
 		collector: colly.NewCollector(),
 		article:   model.Article{},

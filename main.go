@@ -32,6 +32,7 @@ func initFlags() {
 func main() {
 	initFlags()
 
+	// Process flags
 	helpF, _ := flags.CommandLine.GetBool("help")
 	if helpF {
 		flags.Usage()
@@ -54,12 +55,13 @@ func main() {
 		return
 	}
 
+	// Begin initializing scraper
 	config := scraper.Config{
 		URL:     url,
 		Verbose: verboseF,
 	}
 
-	scr := scraper.NewScarper(config)
+	scr := scraper.NewScraper(config)
 
 	err := scr.Scrape()
 	if err != nil {
