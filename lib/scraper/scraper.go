@@ -14,7 +14,7 @@ import (
 
 type Config struct {
 	Verbose bool
-	Url     string
+	URL     string
 }
 
 type Scraper struct {
@@ -146,7 +146,7 @@ func (scraper *Scraper) Scrape() error {
 		scraper.article.Sections = parseMainText(&scraper.config, e.DOM.Children())
 	})
 
-	err := scraper.collector.Visit(scraper.config.Url)
+	err := scraper.collector.Visit(scraper.config.URL)
 	if err != nil {
 		return err
 	}

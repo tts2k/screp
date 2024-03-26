@@ -55,7 +55,7 @@ func main() {
 	}
 
 	config := scraper.Config{
-		Url:     url,
+		URL:     url,
 		Verbose: verboseF,
 	}
 
