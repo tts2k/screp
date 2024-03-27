@@ -168,6 +168,25 @@ func (scraper *Scraper) Scrape() error {
 		scraper.article.Sections = parseMainText(&scraper.config, e.DOM.Children())
 	})
 
+	scraper.collector.OnHTML("div[id=bibliography] > ul", func(e *colly.HTMLElement) {
+		// Primary
+		if e.Index == 0 {
+			scraper.article.Bibliography.Primary = e.DOM.
+				Find("li").
+				Map(func(_ int, s *goquery.Selection) string {
+					return processPText(s.Text())
+				})
+			return
+		}
+
+		// Secondary
+		scraper.article.Bibliography.Secondary = e.DOM.
+			Find("li").
+			Map(func(_ int, s *goquery.Selection) string {
+				return processPText(s.Text())
+			})
+	})
+
 	err := scraper.collector.Visit(scraper.config.URL)
 	if err != nil {
 		return err
