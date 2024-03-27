@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"screp/lib/model"
-	container "screp/lib/utils"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
@@ -49,7 +48,7 @@ func processPText(text string) string {
 
 func parseMainText(config *Config, childs *goquery.Selection) []model.Section {
 	result := []model.Section{}
-	secStack := container.SectionStack{}
+	secStack := SectionStack{}
 
 	// Getting the correct section list
 	var currSectList *[]model.Section

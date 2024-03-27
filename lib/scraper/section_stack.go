@@ -1,4 +1,4 @@
-package container
+package scraper
 
 import (
 	"container/list"
