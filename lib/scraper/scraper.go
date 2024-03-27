@@ -17,7 +17,6 @@ import (
 
 // Global
 var headingRegex = regexp.MustCompile("^[^A-Za-z]+")
-var dateRegex = regexp.MustCompile(`([A-Za-z]{3}\s\d+,\s\d{4})`)
 
 type Config struct {
 	Verbose bool
@@ -145,22 +144,20 @@ func (scraper *Scraper) PrintTOC() *Scraper {
 }
 
 func (scraper *Scraper) Scrape() error {
-	scraper.collector.OnHTML("div[id=pubinfo]", func(e *colly.HTMLElement) {
-		matches := dateRegex.FindAllString(e.Text, 2)
-
-		if matches == nil {
-			return
-		}
-
-		scraper.article.Created = matches[0]
-
-		if len(matches) > 1 {
-			scraper.article.LastModified = matches[1]
-		}
+	scraper.collector.OnHTML(`meta[name="DC.title"]`, func(e *colly.HTMLElement) {
+		scraper.article.Title = e.Attr("content")
 	})
 
-	scraper.collector.OnHTML("div[id=aueditable] h1", func(e *colly.HTMLElement) {
-		scraper.article.Title = e.Text
+	scraper.collector.OnHTML(`meta[name="DC.creator"]`, func(e *colly.HTMLElement) {
+		scraper.article.Author = append(scraper.article.Author, e.Attr("content"))
+	})
+
+	scraper.collector.OnHTML(`meta[name="DCTERMS.issued"]`, func(e *colly.HTMLElement) {
+		scraper.article.Issued = e.Attr("content")
+	})
+
+	scraper.collector.OnHTML(`meta[name="DCTERMS.modified"]`, func(e *colly.HTMLElement) {
+		scraper.article.Modified = e.Attr("content")
 	})
 
 	scraper.collector.OnHTML("div[id=preamble] > p", func(e *colly.HTMLElement) {

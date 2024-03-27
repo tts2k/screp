@@ -7,9 +7,10 @@ type Section struct {
 }
 
 type Article struct {
-	Title        string    `yaml:"title" json:"title"`
-	Created      string    `yaml:"created" json:"created"`
-	LastModified string    `yaml:"lastModified,omitempty" json:"lastModified,omitempty"`
-	Preamble     []string  `yaml:"preamble" json:"preamble"`
-	Sections     []Section `yaml:"sections,omitempty" json:"sections,omitempty"`
+	Title    string    `yaml:"title" json:"title"`
+	Author   []string  `yaml:"author" json:"author"`
+	Issued   string    `yaml:"issued" json:"issued"`
+	Modified string    `yaml:"modified" json:"modified"`
+	Preamble []string  `yaml:"preamble" json:"preamble"`
+	Sections []Section `yaml:"sections,omitempty" json:"sections,omitempty"`
 }
