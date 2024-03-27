@@ -19,17 +19,18 @@ Flags:
 #### Run
 
 ``` sh
-$ go run . https://plato.stanford.edu/entries/exploitation/
+$ ./screp go run . https://plato.stanford.edu/entries/exploitation/
 ```
 
 #### JSON output
 ```sh
-$ go run . https://plato.stanford.edu/entries/exploitation/ --json | jq .preamble[0]
+$ ./screp https://plato.stanford.edu/entries/exploitation/ --json | jq .preamble[0]
 
-"To exploit someone is to take unfair advantage of them. It is to use another person’s vulnerability for one’s own benefit. Of course, be
-nefitting from another’s vulnerability is not always morally wrong—we do not condemn a chess player for exploiting a weakness in his oppo
-nent’s defence, for instance. But some forms of advantage-taking do seem to be clearly wrong, and it is this normative sense of exploitat
-ion that is of primary interest to moral and political philosophers."
+"To exploit someone is to take unfair advantage of them. It is to use another person’s vulnerability
+for one’s own benefit. Of course, benefitting from another’s vulnerability is not always morally
+wrong—we do not condemn a chess player for exploiting a weakness in his opponent’s defence, for
+instance. But some forms of advantage-taking do seem to be clearly wrong, and it is this normative
+sense of exploitation that is of primary interest to moral and political philosophers."
 ```
 
 ### TODO
