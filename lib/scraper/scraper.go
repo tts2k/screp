@@ -15,6 +15,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Global
+var headingRegex = regexp.MustCompile("^[^A-Za-z]+")
+var dateRegex = regexp.MustCompile(`([A-Za-z]{3}\s\d+,\s\d{4})`)
+
 type Config struct {
 	Verbose bool
 	URL     string
@@ -47,8 +51,6 @@ func processPText(text string) string {
 func parseMainText(config *Config, childs *goquery.Selection) []model.Section {
 	result := []model.Section{}
 	secStack := container.SectionStack{}
-
-	headingRe := regexp.MustCompile("^[^A-Za-z]+")
 
 	// Getting the correct section list
 	var currSectList *[]model.Section
@@ -86,7 +88,7 @@ func parseMainText(config *Config, childs *goquery.Selection) []model.Section {
 			}
 
 			// When heading levels are equal
-			newSection := model.Section{Title: headingRe.ReplaceAllString(s.Text(), "")}
+			newSection := model.Section{Title: headingRegex.ReplaceAllString(s.Text(), "")}
 			*currSectList = append(*currSectList, newSection)
 
 			return
@@ -143,6 +145,20 @@ func (scraper *Scraper) PrintTOC() *Scraper {
 }
 
 func (scraper *Scraper) Scrape() error {
+	scraper.collector.OnHTML("div[id=pubinfo]", func(e *colly.HTMLElement) {
+		matches := dateRegex.FindAllString(e.Text, 2)
+
+		if matches == nil {
+			return
+		}
+
+		scraper.article.Created = matches[0]
+
+		if len(matches) > 1 {
+			scraper.article.LastModified = matches[1]
+		}
+	})
+
 	scraper.collector.OnHTML("div[id=aueditable] h1", func(e *colly.HTMLElement) {
 		scraper.article.Title = e.Text
 	})
