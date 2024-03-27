@@ -19,7 +19,7 @@ Flags:
 #### Run
 
 ``` sh
-$ ./screp go run . https://plato.stanford.edu/entries/exploitation/
+$ ./screp https://plato.stanford.edu/entries/exploitation/
 ```
 
 #### JSON output
@@ -33,6 +33,9 @@ instance. But some forms of advantage-taking do seem to be clearly wrong, and it
 sense of exploitation that is of primary interest to moral and political philosophers."
 ```
 
+#### Maybe grill some [fishes](https://fishshell.com/) while chewing [gums](https://github.com/charmbracelet/gum), recorded in [vhs](https://github.com/charmbracelet/vhs)
+![derrida](docs/derrida.gif)
+
 ### TODO
 - [x] TOC print out as a tree
 - [x] Scrape main text
@@ -40,4 +43,7 @@ sense of exploitation that is of primary interest to moral and political philoso
 - [x] JSON output
 - [x] YAML output
 - [ ] Use the result to do some silly things with [templ](https://templ.guide)
-- [ ] Pandoc integration
+- [ ] Markdown output
+
+### Advanced nice-to-have features
+- [ ] Scrape images and math fields
