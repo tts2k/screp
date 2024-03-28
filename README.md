@@ -37,14 +37,14 @@ sense of exploitation that is of primary interest to moral and political philoso
 If you prefer to read from your terminal, screp can output Troff with ms macro. Using it should be the same, more or less
 ![simplicity](docs/simplicity.gif)
 
-#### Leveraging the power of [Groff](https://www.gnu.org/software/groff/), you can also turn the output into a pdf file
+Leveraging the power of [Groff](https://www.gnu.org/software/groff/), you can also turn the output into a pdf file
 ```sh
-./screp https://plato.stanford.edu/entries/simplicity | groff -k -ms -ww -Tpdf > output.pdf
+./screp https://plato.stanford.edu/entries/simplicity | groff -k -ms -E -Tpdf > output.pdf
 ```
 
-#### Groff can turn the output into html too! Although the upcoming Templ render feature will output much better formatted html
+Groff can turn the output into html too! Although the upcoming Templ render feature will output much better formatted html
 ```sh
-./screp https://plato.stanford.edu/entries/simplicity | groff -k -ms -ww -Thtml > output.html
+./screp https://plato.stanford.edu/entries/simplicity | groff -k -ms -E -Thtml > output.html
 ```
 
 #### Maybe grill some [fishes](https://fishshell.com/) while chewing [gums](https://github.com/charmbracelet/gum), recorded in [vhs](https://github.com/charmbracelet/vhs)
@@ -58,6 +58,8 @@ If you prefer to read from your terminal, screp can output Troff with ms macro. 
 - [x] YAML output
 - [ ] Use the result to do some silly things with [templ](https://templ.guide)
 - [ ] Markdown output
+- [ ] Blockquote parsing
+- [ ] Table parsing
 
 ### Advanced nice-to-have features
 - [ ] Scrape images and math fields
