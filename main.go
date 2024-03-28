@@ -39,13 +39,13 @@ func initFlags() error {
 		flags.PrintDefaults()
 	}
 
-	flags.BoolP("verbose", "v", false, "Enable verbose output")
+	flags.BoolP("help", "h", false, "Print this help message")
 	flags.BoolP("json", "j", false, "Output to JSON")
 	flags.BoolP("yaml", "y", false, "Output to YAML")
 	flags.BoolP("html", "H", false, "Output to HTML")
 	flags.BoolP("md", "m", false, "Output to Markdown")
 	flags.BoolP("troff", "t", false, "Output to Markdown")
-	flags.BoolP("help", "h", false, "Print this help message")
+	flags.BoolP("verbose", "v", false, "Enable verbose output")
 	flags.CommandLine.SortFlags = false
 
 	flags.Parse()
