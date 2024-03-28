@@ -1,17 +1,14 @@
 package scraper
 
 import (
-	"encoding/json"
 	"fmt"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"screp/lib/model"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
-	"gopkg.in/yaml.v3"
 )
 
 // Global
@@ -108,40 +105,6 @@ func parseMainText(config *Config, childs *goquery.Selection) []model.Section {
 	return result
 }
 
-func recurPrintTOC(sections []model.Section, prefix string, level int) {
-	var pad string
-	for i := 0; i < level; i++ {
-		pad += "  "
-	}
-
-	for index, section := range sections {
-		var sectionNumbering string
-
-		if prefix == "" {
-			sectionNumbering = strconv.Itoa(index+1) + "."
-		} else {
-			sectionNumbering = fmt.Sprintf("%s%d", prefix, index+1)
-		}
-
-		fmt.Printf("%s%s %s\n", pad, sectionNumbering, section.Title)
-
-		// remove the dot on first level
-		if prefix == "" {
-			sectionNumbering = sectionNumbering[:1]
-		}
-
-		if len(section.SubSections) > 0 {
-			recurPrintTOC(section.SubSections, sectionNumbering+".", level+1)
-		}
-	}
-}
-
-func (scraper *Scraper) PrintTOC() *Scraper {
-	fmt.Println(scraper.article.Title)
-	recurPrintTOC(scraper.article.Sections, "", 0)
-	return scraper
-}
-
 func (scraper *Scraper) Scrape() error {
 	scraper.collector.OnHTML(`meta[name="DC.title"]`, func(e *colly.HTMLElement) {
 		scraper.article.Title = e.Attr("content")
@@ -194,22 +157,4 @@ func (scraper *Scraper) Scrape() error {
 	scraper.collector.Wait()
 
 	return nil
-}
-
-func (scraper *Scraper) YAML() (string, error) {
-	out, err := yaml.Marshal(scraper.article)
-	if err != nil {
-		return "", err
-	}
-
-	return string(out), nil
-}
-
-func (scraper *Scraper) JSON() (string, error) {
-	out, err := json.Marshal(scraper.article)
-	if err != nil {
-		return "", err
-	}
-
-	return string(out), nil
 }

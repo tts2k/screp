@@ -43,13 +43,14 @@ func initFlags() error {
 	flags.BoolP("json", "j", false, "Output to JSON")
 	flags.BoolP("yaml", "y", false, "Output to YAML")
 	flags.BoolP("html", "H", false, "Output to HTML")
-	flags.BoolP("markdown", "m", false, "Output to Markdown")
+	flags.BoolP("md", "m", false, "Output to Markdown")
+	flags.BoolP("troff", "t", false, "Output to Markdown")
 	flags.BoolP("help", "h", false, "Print this help message")
 	flags.CommandLine.SortFlags = false
 
 	flags.Parse()
 
-	err := checkBoolFlagsConflict([]string{"json", "yaml", "html", "markdown"})
+	err := checkBoolFlagsConflict([]string{"json", "yaml", "html", "markdown", "troff"})
 	if err != nil {
 		return err
 	}
@@ -93,11 +94,12 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		return
 	}
+	article := scr.Article()
 
 	// YAML
 	yamlF, _ := flags.CommandLine.GetBool("yaml")
 	if yamlF {
-		yaml, err := scr.YAML()
+		yaml, err := article.YAML()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return
@@ -110,7 +112,7 @@ func main() {
 	// JSON
 	jsonF, _ := flags.CommandLine.GetBool("json")
 	if jsonF {
-		json, err := scr.JSON()
+		json, err := article.JSON()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return
@@ -120,6 +122,7 @@ func main() {
 		return
 	}
 
-	// Print table of content
-	scr.PrintTOC()
+	// Print plain text
+	text := article.Troff()
+	fmt.Println(text)
 }
