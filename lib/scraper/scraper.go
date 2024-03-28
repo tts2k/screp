@@ -105,6 +105,74 @@ func parseMainText(config *Config, childs *goquery.Selection) []model.Section {
 	return result
 }
 
+func parseBib(config *Config, childs *goquery.Selection) []model.Section {
+	result := []model.Section{}
+	secStack := SectionStack{}
+
+	// Getting the correct section list
+	var currSectList *[]model.Section
+	headingLvl := 2
+
+	updateCurrSectList := func() {
+		if secStack.IsEmpty() {
+			currSectList = &result
+		} else {
+			currSectList = &secStack.Peek().SubSections
+		}
+	}
+	updateCurrSectList()
+
+	childs.Each(func(_ int, s *goquery.Selection) {
+		tagName := goquery.NodeName(s)
+
+		// Heading tag
+		if tagName[0] == 'h' {
+			currTagHeadingLvl := int(tagName[1] - '0')
+
+			// When heading is deeper than current heading level
+			if currTagHeadingLvl > headingLvl {
+				headingLvl++
+				currSect := &(*currSectList)[len(*currSectList)-1]
+				secStack.Push(currSect)
+				updateCurrSectList()
+			}
+
+			// When heading isn't deeper than current heading level
+			for currTagHeadingLvl < headingLvl {
+				headingLvl--
+				secStack.Pop()
+				updateCurrSectList()
+			}
+
+			// When heading levels are equal
+			newSection := model.Section{Title: headingRegex.ReplaceAllString(s.Text(), "")}
+			*currSectList = append(*currSectList, newSection)
+
+			return
+		}
+
+		// Unsupported tags
+		if tagName != "ul" && tagName != "p" {
+			if config.Verbose {
+				fmt.Println("Skipped unsupported bibliography tag:", tagName)
+			}
+			return
+		}
+
+		// ul or p tag
+		currSect := &(*currSectList)[len(*currSectList)-1]
+		if tagName == "p" {
+			currSect.Content = append(currSect.Content, processPText(s.Text()))
+		} else {
+			currSect.Content = s.Find("li").Map(func(_ int, s *goquery.Selection) string {
+				return processPText(s.Text())
+			})
+		}
+	})
+
+	return result
+}
+
 func (scraper *Scraper) Scrape() error {
 	scraper.collector.OnHTML(`meta[name="DC.title"]`, func(e *colly.HTMLElement) {
 		scraper.article.Title = e.Attr("content")
@@ -130,23 +198,8 @@ func (scraper *Scraper) Scrape() error {
 		scraper.article.Sections = parseMainText(&scraper.config, e.DOM.Children())
 	})
 
-	scraper.collector.OnHTML("div[id=bibliography] > ul", func(e *colly.HTMLElement) {
-		// Primary
-		if e.Index == 0 {
-			scraper.article.Bibliography.Primary = e.DOM.
-				Find("li").
-				Map(func(_ int, s *goquery.Selection) string {
-					return processPText(s.Text())
-				})
-			return
-		}
-
-		// Secondary
-		scraper.article.Bibliography.Secondary = e.DOM.
-			Find("li").
-			Map(func(_ int, s *goquery.Selection) string {
-				return processPText(s.Text())
-			})
+	scraper.collector.OnHTML("div[id=bibliography]", func(e *colly.HTMLElement) {
+		scraper.article.Bibliography = parseBib(&scraper.config, e.DOM.Children())
 	})
 
 	err := scraper.collector.Visit(scraper.config.URL)
