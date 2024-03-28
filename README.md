@@ -44,7 +44,7 @@ If you prefer to read from your terminal, screp can output Troff with ms macro. 
 
 #### Groff can turn the output into html too! Although the upcoming Templ render feature will output much better formatted html
 ```sh
-./screp https://plato.stanford.edu/entries/simplicity | groff -k -ms -ww -Tpdf > output.pdf
+./screp https://plato.stanford.edu/entries/simplicity | groff -k -ms -ww -Thtml > output.html
 ```
 
 #### Maybe grill some [fishes](https://fishshell.com/) while chewing [gums](https://github.com/charmbracelet/gum), recorded in [vhs](https://github.com/charmbracelet/vhs)
