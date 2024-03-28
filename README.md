@@ -33,6 +33,19 @@ instance. But some forms of advantage-taking do seem to be clearly wrong, and it
 sense of exploitation that is of primary interest to moral and political philosophers."
 ```
 
+#### If you prefer to read from your terminal, screp can output Troff with ms macro. Using it should be the same, more or less
+![simplicity](docs/simplicity.gif)
+
+#### Leveraging the power of [Groff](https://www.gnu.org/software/groff/), you can also turn the output into a pdf file
+```sh
+./screp https://plato.stanford.edu/entries/simplicity | groff -k -ms -ww -Tpdf > output.pdf
+```
+
+#### Groff can turn the output into html too! Although the upcoming Templ render feature will output much better formatted html
+```sh
+./screp https://plato.stanford.edu/entries/simplicity | groff -k -ms -ww -Tpdf > output.pdf
+```
+
 #### Maybe grill some [fishes](https://fishshell.com/) while chewing [gums](https://github.com/charmbracelet/gum), recorded in [vhs](https://github.com/charmbracelet/vhs)
 ![derrida](docs/derrida.gif)
 
