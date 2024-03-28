@@ -33,7 +33,8 @@ instance. But some forms of advantage-taking do seem to be clearly wrong, and it
 sense of exploitation that is of primary interest to moral and political philosophers."
 ```
 
-#### If you prefer to read from your terminal, screp can output Troff with ms macro. Using it should be the same, more or less
+#### Troff output
+If you prefer to read from your terminal, screp can output Troff with ms macro. Using it should be the same, more or less
 ![simplicity](docs/simplicity.gif)
 
 #### Leveraging the power of [Groff](https://www.gnu.org/software/groff/), you can also turn the output into a pdf file
